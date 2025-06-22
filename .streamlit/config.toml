@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#3366FF"              # Azul para botones y énfasis
+backgroundColor = "#F5F7FA"           # Fondo general gris claro
+secondaryBackgroundColor = "#FFFFFF"  # Fondo de tarjetas y sidebar
+textColor = "#1A1A1A"                 # Negro para el texto
+font = "sans serif"                   # Fuente moderna

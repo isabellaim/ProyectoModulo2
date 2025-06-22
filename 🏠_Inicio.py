@@ -1,47 +1,34 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
-st.title("📄 Proyecto Final – Resultados de Consultas SQL")
+st.set_page_config(page_title="Inicio", layout="wide")
+
+st.title("📊 Proyecto Final – Análisis con SQL")
 
 st.markdown("""
-Este proyecto corresponde al trabajo final del módulo de SQL, y tiene como objetivo aplicar los conocimientos adquiridos para resolver 
-preguntas de negocio utilizando la base de datos Northwind.
+Este proyecto corresponde al trabajo final del módulo de **SQL**, donde aplicamos consultas para resolver preguntas de negocio utilizando la base de datos **Northwind**.
 
-Northwind es una base de datos simulada que representa las operaciones de una empresa de distribución. Incluye información sobre 
-productos, clientes, empleados, proveedores, órdenes y detalles de ventas.
+La base incluye información sobre productos, clientes, empleados, proveedores, órdenes y ventas, lo que nos permite explorar y obtener **conclusiones clave del negocio** a partir de datos simulados.
 
-A lo largo de este proyecto, se plantean consultas SQL agrupadas en tres secciones principales:
+La aplicación presenta resultados agrupados en tres secciones:
 
-- 📦 Análisis de ventas: productos más vendidos, categorías rentables, países con mayor ingreso, entre otros.
-- 👥 Comportamiento de clientes: porcentaje de clientes inactivos, ticket promedio, comportamiento por país, etc.
-- 📊 Rendimiento y optimización: evolución de ventas, ranking de clientes, análisis temporal de productos.
-
-Esta aplicación presenta exclusivamente los **resultados tabulares** de dichas consultas SQL ejecutadas sobre un servidor remoto (FreeSQLDatabase.com).
+- 📦 Análisis de ventas  
+- 👥 Comportamiento de clientes  
+- 📈 Rendimiento y optimización  
 """)
 
-st.subheader("👨‍👩‍👧 Integrantes del grupo")
+st.divider()
+st.markdown("## 🧑‍🤝‍🧑 Integrantes del grupo")
 
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.image("images/Isabella.jpg", caption="Isabella Martín", width=150)
-with col2:
-    st.image("images/Juan.jpg", caption="Annabella Sánchez", width=300)
-with col3:
-    st.image("images/Annabella.jpg", caption="Juan Munizaga", width=150)
+cols = st.columns(3)
+integrantes = [
+    {"nombre": "Isabella Martín", "foto": "images/isabella.jpg"},
+    {"nombre": "Annabella Sánchez", "foto": "images/annabella.jpg"},
+    {"nombre": "Juan Munizaga", "foto": "images/juan.jpg"}
+]
 
-st.subheader("📚 Secciones del proyecto")
+for col, integrante in zip(cols, integrantes):
+    with col:
+        st.image(integrante["foto"], width=180, caption=integrante["nombre"])
 
-st.markdown("Selecciona una sección desde el menú lateral para ver los resultados de las consultas:")
-st.markdown("""
-- 📦 Análisis de ventas
-- 👥 Comportamiento de clientes
-- 📊 Rendimiento y optimización
-""")
-st.info("Utiliza el menú de la izquierda para navegar entre las secciones.")
-
-components.html("""
-<audio autoplay loop hidden>
-  <source src="music/conejo_malo.mp3" type="audio/mp3">
-</audio>
-""", height=0)
-
+st.divider()
+st.info("ℹ️ Utiliza el menú lateral para explorar los resultados de las distintas secciones.")
