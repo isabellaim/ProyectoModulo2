@@ -207,11 +207,19 @@ st.markdown("""
 st.markdown("---")
 st.markdown("<h2 style='color: #F1962C;'>🔄 Evolución del gasto acumulado por cliente</h2>", unsafe_allow_html=True)
 df4 = pd.read_csv("csvs/pregunta4_terceraseccion.csv")
-query4 = """SELECT cust.CustomerID,cust.CompanyName as nombre,ords.OrderDate as fecha,
-SUM(ordets.UnitPrice*ordets.Quantity) OVER(PARTITION BY cust.CustomerID ORDER BY ords.OrderDate) AS gasto_Acum
-FROM Customers cust JOIN Orders ords ON cust.CustomerID=ords.CustomerID
-JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
-ORDER BY cust.CustomerID,ords.OrderDate;"""
+query4 = """WITH order_totals AS (
+  SELECT cust.CustomerID, cust.CompanyName AS nombre, ords.OrderID, ords.OrderDate AS fecha,
+  SUM(ordets.UnitPrice * ordets.Quantity) AS order_total
+  FROM customers cust JOIN orders ords ON cust.CustomerID = ords.CustomerID
+  JOIN orderdetails ordets  ON ords.OrderID = ordets.OrderID
+  GROUP BY cust.CustomerID, cust.CompanyName, ords.OrderID, ords.OrderDate
+)
+SELECT CustomerID, nombre, fecha, order_total, SUM(order_total) 
+    OVER (PARTITION BY CustomerID ORDER BY fecha
+          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS gasto_acum
+FROM order_totals
+ORDER BY CustomerID, fecha;"""
 
 col1, col2 = st.columns([9,1])
 with col1:
