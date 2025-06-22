@@ -74,9 +74,9 @@ st.markdown("<h2 style='color: #F1962C;'>Integrantes del grupo</h2>", unsafe_all
 
 cols = st.columns(3)
 integrantes = [
-    {"nombre": "Isabella Martín", "foto": "images/isabella.jpg"},
-    {"nombre": "Annabella Sánchez", "foto": "images/annabella.jpg"},
-    {"nombre": "Juan Munizaga", "foto": "images/juan.jpg"}
+    {"nombre": "Isabella Martín", "foto": "images/isabellaOficial.jpg"},
+    {"nombre": "Annabella Sánchez", "foto": "images/annabellaOficial.jpg"},
+    {"nombre": "Juan Munizaga", "foto": "images/juanOficial.jpg"}
 ]
 
 for col, integrante in zip(cols, integrantes):
