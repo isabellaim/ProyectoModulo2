@@ -81,4 +81,4 @@ integrantes = [
 
 for col, integrante in zip(cols, integrantes):
     with col:
-        st.image(integrante["foto"], width=150, caption=f"{integrante['nombre']}", use_column_width=True)
+        st.image(integrante["foto"], width=150, caption=f"{integrante['nombre']}", use_container_width=True)
