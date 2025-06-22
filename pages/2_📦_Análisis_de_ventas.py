@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 from db_config import get_connection
+import utils as U
 
 st.set_page_config(page_title="Dashboard de Ventas", layout="wide")
 
@@ -45,6 +46,8 @@ st.markdown("""
 conn = get_connection()
 st.markdown("---")
 st.markdown("<h2 style='color: #F1962C;'>Top 10 productos por ingresos</h2>", unsafe_allow_html=True)
+
+
 query4 = """
 SELECT pr.productname AS nombre, 
        SUM(ordets.Quantity * ordets.UnitPrice) AS total_ganancia
@@ -54,6 +57,13 @@ GROUP BY pr.ProductID
 ORDER BY total_ganancia DESC 
 LIMIT 10;
 """
+
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query4, key="ejer4")
+
 df4 = pd.read_sql(query4, conn)
 
 fig1 = alt.Chart(df4).mark_bar().encode(
@@ -82,6 +92,12 @@ LIMIT 5;
 """
 df5 = pd.read_sql(query5, conn)
 
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query5, key="ejer5")
+
 fig2 = alt.Chart(df5).mark_bar().encode(
     x=alt.X('tot_ganancia:Q', title='Ingresos'),
     y=alt.Y('categoria:N', sort='-x', title='Categoría'),
@@ -109,6 +125,7 @@ GROUP BY cust.CustomerID
 ORDER BY valor_total DESC 
 LIMIT 1;
 """
+
 df1 = pd.read_sql(query1, conn).iloc[0]
 with col1:
     st.markdown(f"""
@@ -118,6 +135,10 @@ with col1:
         <p>Total: <strong>${df1['valor_total']:,.2f}</strong></p>
     </div>
     """, unsafe_allow_html=True)
+
+    U.ver_sql(query1, key="ejer1")
+
+    
 
 # País con mayores ingresos últimos 12 meses
 query2 = """
@@ -131,6 +152,7 @@ GROUP BY pais
 ORDER BY ingresos DESC 
 LIMIT 1;
 """
+
 df2 = pd.read_sql(query2, conn).iloc[0]
 with col2:
     st.markdown(f"""
@@ -140,6 +162,7 @@ with col2:
         <p>Total: <strong>${df2['ingresos']:,.2f}</strong></p>
     </div>
     """, unsafe_allow_html=True)
+    U.ver_sql(query2, key="ejer2")
 
 # Empleado con más pedidos
 query3 = """
@@ -151,6 +174,7 @@ GROUP BY e.EmployeeID
 ORDER BY total_ordenes DESC 
 LIMIT 1;
 """
+
 df3 = pd.read_sql(query3, conn).iloc[0]
 with col3:
     st.markdown(f"""
@@ -160,5 +184,6 @@ with col3:
         <p>Órdenes: <strong>{df3['total_ordenes']}</strong></p>
     </div>
     """, unsafe_allow_html=True)
+    U.ver_sql(query3, key="ejer3")
 
 conn.close()

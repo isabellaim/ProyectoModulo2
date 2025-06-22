@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 from db_config import get_connection
+import utils as U
 
 st.set_page_config(page_title="Rendimiento y Optimización", layout="wide")
 
@@ -93,6 +94,12 @@ ORDER BY total_gasto DESC;
 df1 = pd.read_sql(query1, conn)
 top5 = df1.head(5)
 
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query1, key="ejer1")
+
 # Estilos más compactos
 st.markdown("""
 <style>
@@ -145,6 +152,13 @@ GROUP BY anio, mes
 ORDER BY anio, mes;
 """
 df2 = pd.read_sql(query2, conn)
+
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query2, key="ejer2")
+
 df2['mes_nombre'] = pd.to_datetime(df2['mes'], format='%m').dt.strftime('%B')
 df2['anio_mes'] = df2['anio'].astype(str) + ' - ' + df2['mes_nombre']
 fig2 = alt.Chart(df2).mark_line(point=True).encode(
@@ -173,6 +187,13 @@ ORDER BY tot_ventas DESC
 LIMIT 1;
 """
 df3 = pd.read_sql(query3, conn)
+
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query3, key="ejer3")
+
 mejor_mes = df3.iloc[0]
 st.markdown("""
 <div class='metric-box'>
@@ -186,6 +207,18 @@ st.markdown("""
 st.markdown("---")
 st.markdown("<h2 style='color: #F1962C;'>🔄 Evolución del gasto acumulado por cliente</h2>", unsafe_allow_html=True)
 df4 = pd.read_csv("csvs/pregunta4_terceraseccion.csv")
+query4 = """SELECT cust.CustomerID,cust.CompanyName as nombre,ords.OrderDate as fecha,
+SUM(ordets.UnitPrice*ordets.Quantity) OVER(PARTITION BY cust.CustomerID ORDER BY ords.OrderDate) AS gasto_Acum
+FROM Customers cust JOIN Orders ords ON cust.CustomerID=ords.CustomerID
+JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
+ORDER BY cust.CustomerID,ords.OrderDate;"""
+
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query4, key="ejer4")
+
 cliente_col = df4.columns[df4.columns.str.lower().str.contains("nombre")]
 if not cliente_col.empty:
     cliente_key = cliente_col[0]
@@ -218,6 +251,25 @@ with st.expander("📋 Ver tabla de todos los clientes"):
 st.markdown("---")
 st.markdown("<h2 style='color: #F1962C;'>🔁 Productos más vendidos por trimestre</h2>", unsafe_allow_html=True)
 df5 = pd.read_csv("csvs/pregunta5_terceraseccion.csv")
+
+query5= """SELECT anio,trimestre,ProductID,nombre,tot_vendido FROM(
+SELECT YEAR(ords.OrderDate) AS anio,QUARTER(ords.OrderDate) AS trimestre,
+        pr.ProductID,pr.ProductName as nombre,
+        SUM(ordets.Quantity) AS tot_vendido,
+        ROW_NUMBER() OVER(
+		PARTITION BY YEAR(ords.OrderDate),QUARTER(ords.OrderDate) 
+        ORDER BY SUM(ordets.Quantity) DESC) AS rn
+ FROM Orders ords
+ JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
+ JOIN Products pr ON ordets.ProductID=pr.ProductID
+ GROUP BY anio,trimestre,pr.ProductID,nombre
+) t WHERE rn=1;"""
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query5, key="ejer5")
+
 df5.rename(columns=lambda x: x.lower(), inplace=True)
 df5['anio_trimestre'] = df5['anio'].astype(str) + ' - Q' + df5['trimestre'].astype(str)
 fig5 = alt.Chart(df5).mark_bar().encode(

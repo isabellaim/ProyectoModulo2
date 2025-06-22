@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 from db_config import get_connection
+import utils as U
 
 st.set_page_config(page_title="Comportamiento de Clientes", layout="wide")
 
@@ -60,6 +61,7 @@ WHERE NOT EXISTS(
   WHERE ords.CustomerID = cust.CustomerID);
 """
 df1 = pd.read_sql(query1, conn)
+
 pct = round(df1['pct'][0], 2)
 with col1:
     st.markdown(f"""
@@ -68,6 +70,8 @@ with col1:
             <div class='metric-value'>{pct}%</div>
         </div>
     """, unsafe_allow_html=True)
+    U.ver_sql(query1, key="ejer4")
+    
 
 # Clientes con 1 sola categoría
 query4 = """
@@ -90,6 +94,7 @@ with col2:
             <div class='metric-value'>{df4['clientes_una_categoria'][0]}</div>
         </div>
     """, unsafe_allow_html=True)
+    U.ver_sql(query4, key="ejer4")
 
 # --- Top países con clientes activos ---
 st.markdown("---")
@@ -102,6 +107,12 @@ GROUP BY c.Country
 ORDER BY num_clientes DESC
 LIMIT 5;
 """
+
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query2, key="ejer2")
 df2 = pd.read_sql(query2, conn)
 fig2 = alt.Chart(df2).mark_bar().encode(
     x=alt.X('num_clientes:Q', title='Clientes'),
@@ -137,6 +148,13 @@ HAVING COUNT(DISTINCT ordets.ProductID) > 10
 ORDER BY DistinctProducts DESC;
 """
 df3 = pd.read_sql(query3, conn)
+
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query3, key="ejer3")
+
 st.dataframe(df3[['CustomerID', 'CompanyName', 'DistinctProducts']].style.set_properties(**{
     'background-color': '#FFF5E6',
     'color': 'black'
@@ -160,6 +178,12 @@ FROM (
 ) t;
 """
 df5g = pd.read_sql(query5_global, conn)
+
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(query5_global, key="ejer5")
 ticket_prom = f"${df5g['prom_ticket_global'][0]:,.2f}"
 st.markdown(f"""
     <div class='metric-box'>
@@ -182,6 +206,13 @@ GROUP BY t.Country
 ORDER BY prom_ticket_pais DESC;
 """
 df5p = pd.read_sql(ticket_query, conn)
+
+col1, col2 = st.columns([9,1])
+with col1:
+    st.write("")  # ya está el markdown arriba
+with col2:
+    U.ver_sql(ticket_query, key="ejer5")
+
 df5p_top5 = df5p.head(5)
 fig5 = alt.Chart(df5p_top5).mark_bar().encode(
     x=alt.X('prom_ticket_pais:Q', title='Promedio ($)'),
