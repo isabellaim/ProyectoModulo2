@@ -3,39 +3,39 @@ use northwind;
 -- Nombres: Annabella Sánchez, Juan Munizaga, Isabella Martín
 -- Primer Ejercicio - Primera Seccion
 SELECT pr.productname as nombre, sum(ordets.Quantity * ordets.UnitPrice) as total_ganancia
-FROM Products pr join OrderDetails ordets
+FROM products pr join orderdetails ordets
 on pr.ProductID = ordets.ProductID
 group by pr.ProductID
 order by total_ganancia desc LIMIT 10;
 
 -- Segundo Ejercicio -- Primera Seccion
 SELECT c.CategoryName as categoria, sum(ordets.Quantity * ordets.UnitPrice) as tot_ganancia
-from Categories c join Products pr on c.CategoryID = pr.CategoryID 
-join OrderDetails ordets on pr.ProductID = ordets.ProductID
+from categories c join products pr on c.CategoryID = pr.CategoryID 
+join orderdetails ordets on pr.ProductID = ordets.ProductID
 group by categoria
 order by tot_ganancia desc limit 5;
 
 -- Tercer Ejercicio: ¿Qué cliente ha realizado más compras en valor total? - Primera Seccion
 SELECT cust.CompanyName, sum(ordets.Quantity * ordets.UnitPrice) as valor_total
-from Customers cust join Orders ords on cust.CustomerID = ords.CustomerID 
-join OrderDetails ordets on ordets.OrderID = ords.OrderID
+from customers cust join orders ords on cust.CustomerID = ords.CustomerID 
+join orderdetails ordets on ordets.OrderID = ords.OrderID
 group by cust.CustomerID
 order by valor_total desc limit 1;
 
 -- Cuarto Ejercicio: ¿Qué país ha generado más ingresos en los últimos 12 meses? - Primera Seccion
 SELECT cust.Country as pais, sum(ordets.Quantity * ordets.UnitPrice) as ingresos
-from Customers cust join Orders ords on cust.CustomerID = ords.CustomerID 
-join OrderDetails ordets on ordets.OrderID = ords.OrderID
+from customers cust join orders ords on cust.CustomerID = ords.CustomerID 
+join orderdetails ordets on ordets.OrderID = ords.OrderID
 where ords.OrderDate >= (SELECT date_sub(MAX(o.OrderDate), INTERVAL 12 month)
-						FROM Orders o)
+						FROM orders o)
 group by pais
 order by ingresos desc limit 1;
 
 -- Quinto ejercicio:  ¿Qué empleado ha gestionado la mayor cantidad de pedidos? - Primera Seccion
 SELECT e.FirstName as nombre, e.LastName as apellido, count(ords.OrderID) as total_ordenes
-from Employees e join Orders ords on e.EmployeeID = ords.EmployeeID
+from employees e join orders ords on e.EmployeeID = ords.EmployeeID
 group by e.EmployeeID
-order by total_ordenes DESC LIMIT 1;
+order by total_ordenes DESC LIMIT 2;
 
 -- Primer Ejercicio: ¿Qué porcentaje de clientes no ha comprado nada? - Segunda Sección
 SELECT 100 * COUNT(*)/(SELECT COUNT(*) FROM Customers) as pct 
@@ -65,10 +65,10 @@ ORDER BY DistinctProducts DESC ;
 SELECT COUNT(*) AS clientes_una_categoria
 FROM (
   SELECT cust.CustomerID, COUNT(DISTINCT pr.CategoryID) AS num_categorias
-  FROM Customers cust
-  JOIN Orders ords ON cust.CustomerID=ords.CustomerID
-  JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
-  JOIN Products pr ON ordets.ProductID=pr.ProductID
+  FROM customers cust
+  JOIN orders ords ON cust.CustomerID=ords.CustomerID
+  JOIN orderDetails ordets ON ords.OrderID=ordets.OrderID
+  JOIN products pr ON ordets.ProductID=pr.ProductID
   GROUP BY cust.CustomerID
   HAVING num_categorias=1
 ) sub;
@@ -76,37 +76,37 @@ FROM (
 -- Quinta Pregunta: ¿Cuál es el ticket promedio por pedido y cómo varía entre países? - Segunda Sección 
 SELECT AVG(t.total_orden) AS prom_ticket_global
 FROM (SELECT ords.OrderID,SUM(ordets.UnitPrice*ordets.Quantity) AS total_orden
-      FROM Orders ords
-      JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
+      FROM orders ords
+      JOIN orderdetails ordets ON ords.OrderID=ordets.OrderID
       GROUP BY ords.OrderID) t;
 
 SELECT t.Country,AVG(t.OrderTotal) AS prom_ticket_pais
 FROM (SELECT ords.OrderID,cust.Country,SUM(ordets.UnitPrice*ordets.Quantity) AS OrderTotal
       FROM Customers cust
       JOIN Orders ords ON cust.CustomerID=ords.CustomerID
-      JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
+      JOIN orderdetails ordets ON ords.OrderID=ordets.OrderID
       GROUP BY ords.OrderID,cust.Country) t
 GROUP BY t.Country
 ORDER BY prom_ticket_pais DESC;
 
 -- Primer Ejercicio - ¿Cuál es el ranking de clientes por gasto total? - Tercera Seccion
 SELECT cust.CustomerID,cust.CompanyName,SUM(ordets.UnitPrice*ordets.Quantity) AS total_gasto
-FROM Customers cust JOIN Orders ords ON cust.CustomerID=ords.CustomerID
-JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
+FROM customers cust JOIN orders ords ON cust.CustomerID=ords.CustomerID
+JOIN orderdetails ordets ON ords.OrderID=ordets.OrderID
 GROUP BY cust.CustomerID,cust.CompanyName
 ORDER BY total_gasto DESC;
 
 -- Segundo Ejercicio: ¿Cuál es el total de productos vendidos por mes? - Tercera Seccion
 SELECT YEAR(ords.OrderDate) AS anio,MONTH(ords.OrderDate) AS mes,SUM(ordets.Quantity) AS tot_prods
-FROM Orders ords JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
+FROM orders ords JOIN orderdetails ordets ON ords.OrderID=ordets.OrderID
 GROUP BY anio,mes
 ORDER BY anio,mes;
 
 -- Tercer Ejercicio: ¿Cuál fue el mejor mes en ventas del último año? - Tercera Seccion
 SELECT DATE_FORMAT(ords.OrderDate,'%Y-%m') AS mes,SUM(ordets.UnitPrice*ordets.Quantity) AS tot_ventas
-FROM Orders ords JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
+FROM orders ords JOIN orderdetails ordets ON ords.OrderID=ordets.OrderID
 WHERE ords.OrderDate>=(SELECT date_sub(MAX(ords.OrderDate), INTERVAL 1 year)
-						FROM Orders ords)
+						FROM orders ords)
 GROUP BY mes
 ORDER BY tot_ventas DESC LIMIT 1;
 
@@ -133,8 +133,8 @@ SELECT YEAR(ords.OrderDate) AS anio,QUARTER(ords.OrderDate) AS trimestre,
         ROW_NUMBER() OVER(
 		PARTITION BY YEAR(ords.OrderDate),QUARTER(ords.OrderDate) 
         ORDER BY SUM(ordets.Quantity) DESC) AS rn
- FROM Orders ords
- JOIN OrderDetails ordets ON ords.OrderID=ordets.OrderID
- JOIN Products pr ON ordets.ProductID=pr.ProductID
+ FROM orders ords
+ JOIN orderdetails ordets ON ords.OrderID=ordets.OrderID
+ JOIN products pr ON ordets.ProductID=pr.ProductID
  GROUP BY anio,trimestre,pr.ProductID,nombre
 ) t WHERE rn=1;
