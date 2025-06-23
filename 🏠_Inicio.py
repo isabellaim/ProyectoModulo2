@@ -82,9 +82,4 @@ integrantes = [
 for col, integrante in zip(cols, integrantes):
 
     with col:
-        st.write("Ruta imagen:", integrante["foto"])
-        import os
-        if not os.path.exists(integrante["foto"]):
-            st.error(f"No se encuentra la imagen: {integrante['foto']}")
-        else:
-            st.image(integrante["foto"], width=150, caption=f"{integrante['nombre']}", use_container_width=True)
+        st.image(integrante["foto"], width=150, caption=f"{integrante['nombre']}", use_container_width=True)
