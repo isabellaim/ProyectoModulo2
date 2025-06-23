@@ -240,8 +240,8 @@ df_cliente = df4[df4[cliente_key] == cliente_sel]
 df_cliente['fecha'] = pd.to_datetime(df_cliente['fecha'])
 fig4 = alt.Chart(df_cliente).mark_line(point=True).encode(
     x='fecha:T',
-    y='gasto_Acum:Q',
-    tooltip=['fecha', 'gasto_Acum']
+    y='gasto_acum:Q',
+    tooltip=['fecha', 'gasto_acum']
 ).properties(title=f"Evolución de gasto: {cliente_sel}", width=800, height=300)
 st.altair_chart(fig4, use_container_width=True)
 with st.expander("📋 Ver tabla del cliente"):
