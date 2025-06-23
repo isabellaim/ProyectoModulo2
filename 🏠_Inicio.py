@@ -69,6 +69,10 @@ with section_cols[2]:
 
 st.markdown("---")
 
+st.info("ℹ️ Usa el menú lateral (sidebar) para navegar por las secciones del proyecto.")
+
+st.markdown("---")
+
 # --- Integrantes ---
 st.markdown("<h2 style='color: #F1962C;'>Integrantes del grupo</h2>", unsafe_allow_html=True)
 
