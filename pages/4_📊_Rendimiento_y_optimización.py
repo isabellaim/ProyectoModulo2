@@ -82,7 +82,7 @@ version_df = pd.read_sql("SELECT VERSION() AS version;", conn)
 print("Versión de MySQL:", version_df["version"][0])
 
 # --- Ejercicio 1 ---
-st.markdown("<h2 style='color: #F1962C;'>🥇 Ranking de clientes por gasto total</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #F1962C;'>Ranking de clientes por gasto total</h2>", unsafe_allow_html=True)
 query1 = """
 SELECT cust.CustomerID, cust.CompanyName, SUM(ordets.UnitPrice * ordets.Quantity) AS total_gasto
 FROM Customers cust 
@@ -143,7 +143,7 @@ with st.expander("📋 Ver tabla completa"):
 
 # --- Ejercicio 2 ---
 st.markdown("---")
-st.markdown("<h2 style='color: #F1962C;'>📅 Total de productos vendidos por mes</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #F1962C;'>Total de productos vendidos por mes</h2>", unsafe_allow_html=True)
 query2 = """
 SELECT YEAR(ords.OrderDate) AS anio, MONTH(ords.OrderDate) AS mes, SUM(ordets.Quantity) AS tot_prods
 FROM Orders ords 
@@ -175,7 +175,7 @@ with st.expander("📋 Ver tabla completa"):
 
 # --- Ejercicio 3 ---
 st.markdown("---")
-st.markdown("<h2 style='color: #F1962C;'>🏆 Mejor mes en ventas del último año</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #F1962C;'>Mejor mes en ventas del último año</h2>", unsafe_allow_html=True)
 query3 = """
 SELECT DATE_FORMAT(ords.OrderDate,'%Y-%m') AS mes, SUM(ordets.UnitPrice * ordets.Quantity) AS tot_ventas
 FROM Orders ords 
@@ -205,7 +205,7 @@ st.markdown("""
 
 # --- Ejercicio 4 ---
 st.markdown("---")
-st.markdown("<h2 style='color: #F1962C;'>🔄 Evolución del gasto acumulado por cliente</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #F1962C;'>Evolución del gasto acumulado por cliente</h2>", unsafe_allow_html=True)
 df4 = pd.read_csv("csvs/pregunta4_terceraseccion.csv")
 query4 = """WITH order_totals AS (
   SELECT cust.CustomerID, cust.CompanyName AS nombre, ords.OrderID, ords.OrderDate AS fecha,
@@ -257,7 +257,7 @@ with st.expander("📋 Ver tabla de todos los clientes"):
 
 # --- Ejercicio 5 ---
 st.markdown("---")
-st.markdown("<h2 style='color: #F1962C;'>🔁 Productos más vendidos por trimestre</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #F1962C;'>Productos más vendidos por trimestre</h2>", unsafe_allow_html=True)
 df5 = pd.read_csv("csvs/pregunta5_terceraseccion.csv")
 
 query5= """SELECT anio,trimestre,ProductID,nombre,tot_vendido FROM(
