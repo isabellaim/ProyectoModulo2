@@ -56,14 +56,22 @@ Este repositorio contiene un proyecto de análisis de la base de datos **Northwi
 .
 ├── README.md
 ├── __pycache__
-│   └── db_config.cpython-311.pyc
+│   ├── db_config.cpython-311.pyc
+│   └── utils.cpython-311.pyc
+├── assets
+│   ├── aniClientes.json
+│   ├── aniDB.json
+│   ├── aniDash.json
+│   ├── aniRendimiento.json
+│   └── aniVentas.json
+├── csvs
+│   ├── pregunta4_terceraseccion.csv
+│   └── pregunta5_terceraseccion.csv
 ├── db_config.py
 ├── images
-│   ├── Annabella.jpg
-│   ├── Isabella.jpg
-│   └── Juan.jpg
-├── music
-│   └── conejo_malo.mp3
+│   ├── annabellaOficial.jpg
+│   ├── isabellaOficial.jpg
+│   └── juanOficial.jpg
 ├── pages
 │   ├── 2_📦_Análisis_de_ventas.py
 │   ├── 3_👥_Comportamiento_de_clientes.py
@@ -73,8 +81,10 @@ Este repositorio contiene un proyecto de análisis de la base de datos **Northwi
 │       ├── inicio.cpython-311.pyc
 │       ├── rendimiento.cpython-311.pyc
 │       └── ventas.cpython-311.pyc
+├── queries_proyecto_corregido.sql
 ├── queries_proyecto_sql.sql
 ├── requirements.txt
+├── utils.py
 └── 🏠_Inicio.py
 ```
 
